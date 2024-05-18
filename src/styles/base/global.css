@@ -1,6 +1,5 @@
 body {
     font-family: var(--ff-plain);
-    color: var(--clr-black);
     /* 
     To sort horizontal scroll bar issue 
     when using full-with trick on image and callout

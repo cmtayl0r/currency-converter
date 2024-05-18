@@ -12,10 +12,18 @@
 }
 
 body {
+    color-scheme: light;
     display: grid;
     place-items: center;
     height: 100vh;
     background: linear-gradient(to right, #ad5389, #3c1053);
+    color: var(--clr-black);
+}
+
+*:focus-visible {
+    outline: 3px solid var(--clr-yellow);
+    outline-offset: 0.25rem;
+    border-radius: 0.125rem;
 }
 
 main {
@@ -40,6 +48,13 @@ h1 {
     font-size: var(--fs-1);
 }
 
+button {
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--clr-black);
+}
+
 .controls {
     display: grid;
     gap: 20px;
@@ -50,4 +65,155 @@ h1 {
     background: var(--input-background);
     box-shadow: inset 0 0 3px var(--input-shadow);
     border-radius: 10px;
+    overflow: hidden;
+}
+.control button {
+    --image: url(https://placehold.co/30/teal/white?text=$);
+    font-weight: var(--fw-semiBold);
+    background: transparent;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.control button::before {
+    content: '';
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: teal var(--image) center no-repeat;
+}
+.control button::after {
+    font-family: 'Material Symbols Outlined';
+    font-size: 1.5rem;
+    content: '\e5cf';
+}
+
+.control button:hover {
+    color: var(--clr-green);
+}
+
+.control input {
+    font-size: 2.5rem;
+    text-align: end;
+    background: transparent;
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 10px 20px;
+    color: var(--clr-black);
+}
+
+.control input::-webkit-inner-spin-button,
+.control input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.swap-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--clr-blue);
+    color: #c2cfd6;
+    line-height: 1;
+    box-shadow: 0 3px 5px var(--shadow-1);
+
+    /* Position the button */
+    position: absolute;
+    top: 50%;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
+    /* Animation */
+    transition: 0.3s;
+}
+
+.swap-btn:hover {
+    background: var(--clr-green);
+}
+
+.swap-btn span {
+    rotate: 90deg;
+    /* Get property value form parent */
+    transition: inherit;
+}
+
+.swap-btn:hover span {
+    rotate: 270deg;
+}
+
+.exchange-rate {
+    text-align: center;
+
+    & h5 {
+        text-transform: uppercase;
+        color: var(--clr-green);
+    }
+    span {
+        margin-top: 10px;
+        display: inline-block;
+        font-weight: var(--fw-semiBold);
+        color: var(--clr-exchange-rate);
+    }
+}
+
+.drawer {
+    position: absolute;
+    inset: 0;
+    background: var(--clr-white);
+    display: grid;
+    align-content: start;
+    padding: 20px;
+    gap: 20px;
+    /* Animation starting point */
+    transform: translateY(100%);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &.show {
+        transform: translateY(0);
+    }
+
+    & .title {
+        text-align: center;
+        position: relative;
+
+        & button {
+            position: absolute;
+            top: 50%;
+            inset-inline-start: 0;
+            transform: translateY(-50%);
+            background: transparent;
+            opacity: 0.5;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.search input {
+    width: 100%;
+    font-size: var(--fs-base);
+    padding: 10px 20px;
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    /* outline-color: var(--clr-green); */
+}
+
+.currency-list {
+    list-style-type: none;
+    overflow-y: auto;
+
+    & li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        padding-block: 5px;
+
+        &:first-child {
+            padding-block-start: 0;
+        }
+    }
 }
