@@ -1,6 +1,7 @@
 :root {
     --clr-blue: #136a8a;
     --clr-green: #267871;
+    --clr-purple: #3c1053;
     --clr-exchange-rate: #555;
     --input-background: rgba(119, 136, 153, 0.15);
     --input-shadow: rgba(119, 136, 153, 0.35);
@@ -39,6 +40,7 @@ main {
         inset 0 0 5px var(--shadow-1),
         0 5px 10px var(--shadow-2);
 
+    /* Relative position set for the swap button and drawer */
     position: relative;
     overflow: hidden;
 }
@@ -105,7 +107,7 @@ Currency "select" button using 3 parts (inc ::before and ::after)
 }
 
 .control button:hover {
-    color: var(--clr-green);
+    color: var(--clr-purple);
 }
 
 /*
@@ -137,28 +139,30 @@ SWAP BUTTON
 */
 /* 
 Button to swap the currency
+Uses a Materia icon for the swap icon
 */
 
 .swap-btn {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--clr-blue);
-    color: #c2cfd6;
+    background: var(--clr-white);
+    color: var(--clr-gray);
     line-height: 1;
     box-shadow: 0 3px 5px var(--shadow-1);
 
-    /* Position the button */
+    /* Position the button in the container (.controls)*/
     position: absolute;
     top: 50%;
     inset-inline-start: 50%;
     transform: translate(-50%, -50%);
     /* Animation */
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 .swap-btn:hover {
-    background: var(--clr-green);
+    color: var(--clr-white);
+    background: var(--clr-purple);
 }
 
 .swap-btn span {
@@ -171,12 +175,18 @@ Button to swap the currency
     rotate: 270deg;
 }
 
+/* 
+-----------------------------------------------------------------------
+EXCHANGE RATE DISPLAY
+-----------------------------------------------------------------------
+*/
+
 .exchange-rate {
     text-align: center;
 
     & h5 {
         text-transform: uppercase;
-        color: var(--clr-green);
+        color: var(--clr-purple);
     }
     span {
         margin-top: 10px;
@@ -186,16 +196,26 @@ Button to swap the currency
     }
 }
 
+/* 
+-----------------------------------------------------------------------
+CURRENCY DRAWER
+-----------------------------------------------------------------------
+*/
+/*
+A drawer that allows user to search for currencies
+Relative position set by <main>
+*/
+
 .drawer {
     position: absolute;
-    inset: 0;
+    inset: 0; /* Hide the drawer */
     background: var(--clr-white);
     display: grid;
     align-content: start;
     padding: 20px;
     gap: 20px;
     /* Animation starting point */
-    transform: translateY(100%);
+    transform: translateY(100%); /* Hide the drawer */
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 
     &.show {
@@ -203,19 +223,33 @@ Button to swap the currency
     }
 
     & .title {
-        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         position: relative;
 
-        & button {
+        & h3 {
             position: absolute;
-            top: 50%;
-            inset-inline-start: 0;
-            transform: translateY(-50%);
-            background: transparent;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Close button */
+        & button {
+            height: 48px;
+            width: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0.5;
+            border-radius: 50%;
+
+            transition: all 0.2s;
 
             &:hover {
                 opacity: 1;
+                background-color: var(--clr-purple);
+                color: var(--clr-white);
             }
         }
     }
@@ -241,6 +275,7 @@ Button to swap the currency
         cursor: pointer;
         padding-block: 5px;
 
+        /* */
         &:first-child {
             padding-block-start: 0;
         }
