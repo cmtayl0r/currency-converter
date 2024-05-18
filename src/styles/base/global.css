@@ -1,0 +1,22 @@
+body {
+  font-family: var(--ff-plain);
+  color: var(--clr-black);
+  /* 
+    To sort horizontal scroll bar issue 
+    when using full-with trick on image and callout
+    vw unit counts under the vertical scrollbar
+    */
+  overflow-x: hidden;
+  /* Default background gradient if none defined */
+  background-color: var(--clr-gray-light);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+}

@@ -1,0 +1,60 @@
+:root {
+  /* Font faces */
+  --ff-plain: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Font weights */
+  --fw-bold: 700;
+  --fw-semiBold: 600;
+  --fw-regular: 400;
+  --fw-light: 300;
+
+  /* Line Height */
+  --lh-base: 1.6;
+  --lh-tight: calc(0.7 * var(--lh-base));
+
+  /* 
+    Fluid typography system
+    https://www.fluid-type-scale.com/
+    - Line height (line spacing) to at least 1.5 times the font size;
+    - Spacing following paragraphs to at least 2 times the font size;
+    */
+  --fs--1: clamp(0.75rem, 0.31vw + 0.69rem, 0.94rem); /* 12px */
+  --fs-base: clamp(1rem, 0.42vw + 0.92rem, 1.25rem); /* 16px */
+  --fs-1: clamp(1.33rem, 0.56vw + 1.22rem, 1.67rem); /* 21px */
+  --fs-2: clamp(1.78rem, 0.74vw + 1.63rem, 2.22rem); /* 28px */
+  --fs-3: clamp(2.37rem, 0.99vw + 2.17rem, 2.96rem); /* 37px */
+  --fs-4: clamp(3.16rem, 1.32vw + 2.89rem, 3.95rem); /* 50px */
+  --fs-5: clamp(4.21rem, 1.75vw + 3.86rem, 5.26rem); /* 67px */
+  --fs-6: clamp(5.61rem, 2.34vw + 5.13rem, 7rem); /* 90px */
+
+  /* Static Spacing system */
+  --sp--3: calc(var(--sp-base) * 0.25); /* 4px */
+  --sp--2: calc(var(--sp-base) * 0.5); /* 8px */
+  --sp--1: calc(var(--sp-base) * 0.75); /* 12px */
+  --sp-base: 1rem; /* 16px */
+  --sp-1: calc(var(--sp-base) * 1.25); /* 20px */
+  --sp-2: calc(var(--sp-base) * 1.5); /* 24px */
+  --sp-3: calc(var(--sp-base) * 2); /* 32px */
+  --sp-4: calc(var(--sp-base) * 2.5); /* 40px */
+  --sp-5: calc(var(--sp-base) * 3); /* 48px */
+  --sp-6: calc(var(--sp-base) * 3.5); /* 56px */
+  --sp-7: calc(var(--sp-base) * 4); /* 64px */
+  --sp-8: calc(var(--sp-base) * 4.5); /* 72px */
+  --sp-9: calc(var(--sp-base) * 5); /* 80px */
+
+  /* Border radius */
+  --br-sm: 0.4rem;
+  --br-md: 0.8rem;
+  --br-lg: 1.2rem;
+
+  /* Colours */
+  --clr-white: #f3f3f3;
+  --clr-creme: blanchedalmond;
+  --clr-black: #0a0a23;
+  --clr-gray-light: #c8c8c8;
+  --clr-gray: #8e8e8e;
+  --clr-gray-dark: #444;
+  --clr-yellow: #ffc608;
+}
