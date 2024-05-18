@@ -60,6 +60,16 @@ button {
     gap: 20px;
     position: relative;
 }
+
+/* 
+-----------------------------------------------------------------------
+CONTROL
+-----------------------------------------------------------------------
+*/
+/* 
+Containers with button for currency selection and amount input
+*/
+
 .control {
     display: flex;
     background: var(--input-background);
@@ -67,6 +77,9 @@ button {
     border-radius: 10px;
     overflow: hidden;
 }
+/* 
+Currency "select" button using 3 parts (inc ::before and ::after) 
+*/
 .control button {
     --image: url(https://placehold.co/30/teal/white?text=$);
     font-weight: var(--fw-semiBold);
@@ -76,6 +89,7 @@ button {
     align-items: center;
     gap: 10px;
 }
+/* Part - The currency symbol */
 .control button::before {
     content: '';
     width: 30px;
@@ -83,6 +97,7 @@ button {
     border-radius: 50%;
     background: teal var(--image) center no-repeat;
 }
+/* Part - The dropdown icon */
 .control button::after {
     font-family: 'Material Symbols Outlined';
     font-size: 1.5rem;
@@ -93,6 +108,9 @@ button {
     color: var(--clr-green);
 }
 
+/*
+The input field for the amount
+*/
 .control input {
     font-size: 2.5rem;
     text-align: end;
@@ -101,14 +119,25 @@ button {
     border: none;
     outline: none;
     padding: 10px 20px;
-    color: var(--clr-black);
 }
 
+/*
+Remove appearance of input type number spinner controls
+*/
 .control input::-webkit-inner-spin-button,
 .control input::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+/* 
+-----------------------------------------------------------------------
+SWAP BUTTON
+-----------------------------------------------------------------------
+*/
+/* 
+Button to swap the currency
+*/
 
 .swap-btn {
     width: 40px;
