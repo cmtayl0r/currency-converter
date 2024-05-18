@@ -1,6 +1,4 @@
 import './src/styles/main.css';
 import axios from 'axios';
 
-document.querySelector('#app').innerHTML = `
-  <h1>Currency Converters</h1>
-`;
+// fca_live_9yWcaJ8XzcMUnwWXMLF0GHVLBVAnl3ROKuSUdu4Q

@@ -1,0 +1,53 @@
+:root {
+    --clr-blue: #136a8a;
+    --clr-green: #267871;
+    --clr-exchange-rate: #555;
+    --input-background: rgba(119, 136, 153, 0.15);
+    --input-shadow: rgba(119, 136, 153, 0.35);
+    --input-border: #ddd;
+    --shadow-1: rgba(0, 0, 0, 0.25);
+    --shadow-2: rgba(0, 0, 0, 0.15);
+    --loading-background-1: #c2cfd6;
+    --loading-background-2: #f0f3fd;
+}
+
+body {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #ad5389, #3c1053);
+}
+
+main {
+    background: var(--clr-white);
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 480px;
+
+    display: grid;
+    gap: 20px;
+    box-shadow:
+        inset 0 0 5px var(--shadow-1),
+        0 5px 10px var(--shadow-2);
+
+    position: relative;
+    overflow: hidden;
+}
+h1 {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: var(--fs-1);
+}
+
+.controls {
+    display: grid;
+    gap: 20px;
+    position: relative;
+}
+.control {
+    display: flex;
+    background: var(--input-background);
+    box-shadow: inset 0 0 3px var(--input-shadow);
+    border-radius: 10px;
+}
