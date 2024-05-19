@@ -5,7 +5,7 @@
 //----------------------------------------------------------------------
 
 const API_KEY = 'fca_live_9yWcaJ8XzcMUnwWXMLF0GHVLBVAnl3ROKuSUdu4Q';
-// const API_LATEST = 'https://api.freecurrencyapi.com/v1/latest';
+const API_LATEST = `https://api.freecurrencyapi.com/v1/latest?apikey=`;
 const API_CURRENCIES = `https://api.freecurrencyapi.com/v1/currencies?apikey=`;
 
 const state = {
@@ -14,6 +14,7 @@ const state = {
     filteredCurrencies: [],
     base: 'USD',
     target: 'EUR',
+    rates: {},
 };
 
 //----------------------------------------------------------------------
@@ -28,6 +29,7 @@ const ui = {
     searchInput: document.getElementById('search'),
     baseBtn: document.getElementById('base'),
     targetBtn: document.getElementById('target'),
+    exchangeRate: document.getElementById('exchange-rate'),
 };
 
 //----------------------------------------------------------------------
@@ -49,7 +51,10 @@ const setupEventListeners = () => {
 const initApp = () => {
     setupEventListeners();
     fetchCurrencies();
+    fetchExchangeRate();
 };
+
+// **** Currencies list related functions
 
 const showDrawer = event => {
     // Checks if the clicked element has the data-drawer attribute
@@ -95,14 +100,15 @@ const selectPair = event => {
         // destructure the openedDrawer state from the state object
         const { openedDrawer } = state;
         // Update openedDrawer state with the selected currency code
+        // This is either 'base' or 'target' based on the button clicked
         state[openedDrawer] = event.target.dataset.code;
-        // update the DOM specified buttons with the selected currency code
+        // Update corresponding button with the selected currency code
         [ui.baseBtn, ui.targetBtn].forEach(btn => {
             // btn.id is either 'base' or 'target'
             const code = state[btn.id];
-            // Set the text content of each button to the currency code
+            // Set the text content and background image of the button
             // The one selected will be updated (base or target)
-            // The other will be the one remain the same
+            // The other will remain the same
             btn.textContent = code;
             btn.style.setProperty('--image', `url(${getImageURL(code)})`);
         });
@@ -114,6 +120,8 @@ const selectPair = event => {
 //----------------------------------------------------------------------
 // RENDER FUNCTIONS
 //----------------------------------------------------------------------
+
+// **** Currencies list related functions
 
 const renderCurrencies = () => {
     // map over the filteredCurrencies array and create a list item for each currency
@@ -135,6 +143,16 @@ const renderCurrencies = () => {
 //----------------------------------------------------------------------
 // HELPER FUNCTIONS
 //----------------------------------------------------------------------
+
+const updateExchangeRate = () => {
+    const { base, target, rates } = state;
+    console.log(rates);
+    const rate = rates[base][target].toFixed(4);
+    console.log(rate);
+    ui.exchangeRate.textContent = `1 ${base} = ${rate} ${target}`;
+};
+
+// **** Currencies list related functions
 
 const getAvailableCurrencies = () => {
     // filter the currencies array to exclude the base and target currencies
@@ -163,6 +181,8 @@ const getImageURL = code => {
 // API FUNCTIONS
 //----------------------------------------------------------------------
 
+// **** Currencies list related functions
+
 const fetchCurrencies = async () => {
     try {
         // 1 - Wait for fetch call (which is a promise)
@@ -181,6 +201,28 @@ const fetchCurrencies = async () => {
         state.filteredCurrencies = getAvailableCurrencies();
         // render the currencies
         renderCurrencies();
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const fetchExchangeRate = async () => {
+    // destructure the base currency from the state
+    const { base } = state;
+    try {
+        // fetch the latest exchange rates for the base currency
+        let response = await fetch(
+            `${API_LATEST}${API_KEY}&base_currency=${base}`,
+        );
+        if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
+        const { data } = await response.json();
+        // Add the exchange rates to the rates object in the state
+        // Creates an object with the base currency as the key
+        // i.e. { USD: { EUR: 0.85, GBP: 0.75, ... } }
+        state.rates[base] = data;
+        // update the exchange rate text
+        updateExchangeRate();
     } catch (error) {
         console.error(error);
     }
