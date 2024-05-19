@@ -12,6 +12,8 @@ const state = {
     openedDrawer: null,
     currencies: [],
     filteredCurrencies: [],
+    base: 'USD',
+    target: 'EUR',
 };
 
 //----------------------------------------------------------------------
@@ -67,15 +69,17 @@ const hideDrawer = event => {
 const filterCurrencies = () => {
     // get the value of the search input and remove any leading or trailing whitespace
     const keyword = ui.searchInput.value.trim().toLowerCase();
-    // filter the currencies array based on the keyword
+    // filter the available currencies array (minus base and target) based on the keyword
     // and add the filtered currencies to the filteredCurrencies array in the state
-    state.filteredCurrencies = state.currencies.filter(({ code, name }) => {
-        return (
-            // check if the currency code or name includes the keyword
-            code.toLowerCase().includes(keyword) ||
-            name.toLowerCase().includes(keyword)
-        );
-    });
+    state.filteredCurrencies = getAvailableCurrencies().filter(
+        ({ code, name }) => {
+            return (
+                // check if the currency code or name includes the keyword
+                code.toLowerCase().includes(keyword) ||
+                name.toLowerCase().includes(keyword)
+            );
+        },
+    );
     // render the filtered currencies
     renderCurrencies();
 };
@@ -105,12 +109,22 @@ const renderCurrencies = () => {
 // HELPER FUNCTIONS
 //----------------------------------------------------------------------
 
+const getAvailableCurrencies = () => {
+    // filter the currencies array to exclude the base and target currencies
+    return state.currencies.filter(({ code }) => {
+        // return currencies that are not the base or target currency
+        return state.base !== code && state.target !== code;
+    });
+};
+
+// FN: Used to clear the search input when the drawer is closed
 const clearSearchInput = () => {
     ui.searchInput.value = '';
     // Use dispatchEvent because the input event is not triggered by the value property
     ui.searchInput.dispatchEvent(new Event('input'));
 };
 
+// FN: Used to get the image URL for the currency flag when ren
 const getImageURL = code => {
     const flag =
         'https://wise.com/public-resources/assets/flags/rectangle/{code}.png';
@@ -135,9 +149,9 @@ const fetchCurrencies = async () => {
         // 4 - Do something with the data
         // add the values of the data object to the currencies array in the state
         state.currencies = Object.values(data);
-        // Add the currencies to the filteredCurrencies array in the state
+        // Add the currencies (not including base and target) to the filteredCurrencies array
         // because initially, the filteredCurrencies array is empty
-        state.filteredCurrencies = state.currencies;
+        state.filteredCurrencies = getAvailableCurrencies();
         // render the currencies
         renderCurrencies();
     } catch (error) {
