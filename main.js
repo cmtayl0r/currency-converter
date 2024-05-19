@@ -26,6 +26,8 @@ const ui = {
     dismissBtn: document.getElementById('dismiss-btn'),
     currencyList: document.getElementById('currency-list'),
     searchInput: document.getElementById('search'),
+    baseBtn: document.getElementById('base'),
+    targetBtn: document.getElementById('target'),
 };
 
 //----------------------------------------------------------------------
@@ -37,6 +39,7 @@ const setupEventListeners = () => {
     ui.controls.addEventListener('click', showDrawer);
     ui.dismissBtn.addEventListener('click', hideDrawer);
     ui.searchInput.addEventListener('input', filterCurrencies);
+    ui.currencyList.addEventListener('click', selectPair);
 };
 
 //----------------------------------------------------------------------
@@ -82,6 +85,30 @@ const filterCurrencies = () => {
     );
     // render the filtered currencies
     renderCurrencies();
+};
+
+const selectPair = event => {
+    // Click on currency in list
+    // CSS removes pointer events from child elements (img, h, p, div)
+    // check if the clicked element is an li element with the data-code attribute
+    if (event.target.hasAttribute('data-code')) {
+        // destructure the openedDrawer state from the state object
+        const { openedDrawer } = state;
+        // Update openedDrawer state with the selected currency code
+        state[openedDrawer] = event.target.dataset.code;
+        // update the DOM specified buttons with the selected currency code
+        [ui.baseBtn, ui.targetBtn].forEach(btn => {
+            // btn.id is either 'base' or 'target'
+            const code = state[btn.id];
+            // Set the text content of each button to the currency code
+            // The one selected will be updated (base or target)
+            // The other will be the one remain the same
+            btn.textContent = code;
+            btn.style.setProperty('--image', `url(${getImageURL(code)})`);
+        });
+        // close the drawer after selecting a currency
+        hideDrawer();
+    }
 };
 
 //----------------------------------------------------------------------

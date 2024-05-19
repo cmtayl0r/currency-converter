@@ -280,4 +280,9 @@ Relative position set by <main>
             padding-block-start: 0;
         }
     }
+    /* Disable click events for non list item */
+    /* Disregards all other childe targets (img, h4, p) inside li  */
+    & *:not(li) {
+        pointer-events: none;
+    }
 }
