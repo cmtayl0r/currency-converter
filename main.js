@@ -15,6 +15,7 @@ const state = {
     base: 'USD',
     target: 'EUR',
     rates: {},
+    baseValue: 1,
 };
 
 //----------------------------------------------------------------------
@@ -30,6 +31,8 @@ const ui = {
     baseBtn: document.getElementById('base'),
     targetBtn: document.getElementById('target'),
     exchangeRate: document.getElementById('exchange-rate'),
+    baseInput: document.getElementById('base-input'),
+    targetInput: document.getElementById('target-input'),
 };
 
 //----------------------------------------------------------------------
@@ -102,7 +105,7 @@ const selectPair = event => {
         // Update openedDrawer state with the selected currency code
         // This is either 'base' or 'target' based on the button clicked
         state[openedDrawer] = event.target.dataset.code;
-        // Update corresponding button with the selected currency code
+        // Update buttons with the selected currency code
         [ui.baseBtn, ui.targetBtn].forEach(btn => {
             // btn.id is either 'base' or 'target'
             const code = state[btn.id];
@@ -140,15 +143,51 @@ const renderCurrencies = () => {
         .join('');
 };
 
+// **** Exchange rate related functions
+
+const displayConversion = () => {
+    updateButtons();
+    updateInputs();
+    updateExchangeRate();
+};
+
 //----------------------------------------------------------------------
 // HELPER FUNCTIONS
 //----------------------------------------------------------------------
 
+// **** Exchange rate related functions
+
+const updateButtons = () => {
+    // Update buttons with the selected currency code
+    [ui.baseBtn, ui.targetBtn].forEach(btn => {
+        // btn.id is either 'base' or 'target'
+        const code = state[btn.id];
+        // Set the text content and background image of the button
+        // The one selected will be updated (base or target)
+        // The other will remain the same
+        btn.textContent = code;
+        btn.style.setProperty('--image', `url(${getImageURL(code)})`);
+    });
+};
+
+const updateInputs = () => {
+    // destructure the baseValue, base, target, and rates from the state
+    const { baseValue, base, target, rates } = state;
+    // calculate the target value by multiplying the base value by the exchange rate
+    const result = baseValue * rates[base][target];
+    // update the value of the target input with the result
+    ui.targetInput.value = result.toFixed(4);
+    // update the value of the base input with the base value
+    ui.baseInput.value = baseValue;
+};
+
 const updateExchangeRate = () => {
+    // destructure the base, target, and rates from the state
     const { base, target, rates } = state;
-    console.log(rates);
+    // get the exchange rate from the rates object
+    // i.e. { USD: { EUR: 0.85, GBP: 0.75, ... }
     const rate = rates[base][target].toFixed(4);
-    console.log(rate);
+    // update the exchange rate display in the UI
     ui.exchangeRate.textContent = `1 ${base} = ${rate} ${target}`;
 };
 
@@ -206,6 +245,8 @@ const fetchCurrencies = async () => {
     }
 };
 
+// **** Exchange rate related functions
+
 const fetchExchangeRate = async () => {
     // destructure the base currency from the state
     const { base } = state;
@@ -221,8 +262,8 @@ const fetchExchangeRate = async () => {
         // Creates an object with the base currency as the key
         // i.e. { USD: { EUR: 0.85, GBP: 0.75, ... } }
         state.rates[base] = data;
-        // update the exchange rate text
-        updateExchangeRate();
+        // Update the exchange rate display in the UI
+        displayConversion();
     } catch (error) {
         console.error(error);
     }
