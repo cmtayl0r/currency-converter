@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 // TODO: Correct keyboard focus, and focus trap
 
 //----------------------------------------------------------------------
@@ -25,6 +23,7 @@ const ui = {
     drawer: document.getElementById('drawer'),
     dismissBtn: document.getElementById('dismiss-btn'),
     currencyList: document.getElementById('currency-list'),
+    searchInput: document.getElementById('search'),
 };
 
 //----------------------------------------------------------------------
@@ -35,6 +34,7 @@ const setupEventListeners = () => {
     document.addEventListener('DOMContentLoaded', initApp);
     ui.controls.addEventListener('click', showDrawer);
     ui.dismissBtn.addEventListener('click', hideDrawer);
+    ui.searchInput.addEventListener('input', filterCurrencies);
 };
 
 //----------------------------------------------------------------------
@@ -57,9 +57,27 @@ const showDrawer = event => {
     }
 };
 const hideDrawer = event => {
+    // Clears the search input when the drawer is closed
+    clearSearchInput();
     // Resets the openedDrawer state to null
     state.openedDrawer = null;
     ui.drawer.classList.remove('show');
+};
+
+const filterCurrencies = () => {
+    // get the value of the search input and remove any leading or trailing whitespace
+    const keyword = ui.searchInput.value.trim().toLowerCase();
+    // filter the currencies array based on the keyword
+    // and add the filtered currencies to the filteredCurrencies array in the state
+    state.filteredCurrencies = state.currencies.filter(({ code, name }) => {
+        return (
+            // check if the currency code or name includes the keyword
+            code.toLowerCase().includes(keyword) ||
+            name.toLowerCase().includes(keyword)
+        );
+    });
+    // render the filtered currencies
+    renderCurrencies();
 };
 
 //----------------------------------------------------------------------
@@ -67,9 +85,9 @@ const hideDrawer = event => {
 //----------------------------------------------------------------------
 
 const renderCurrencies = () => {
-    // map over the currencies array and create a list item for each currency
+    // map over the filteredCurrencies array and create a list item for each currency
     // destructuring the code and name from each currency object
-    ui.currencyList.innerHTML = state.currencies
+    ui.currencyList.innerHTML = state.filteredCurrencies
         .map(({ code, name }) => {
             return `
             <li data-code="${code}">
@@ -86,6 +104,12 @@ const renderCurrencies = () => {
 //----------------------------------------------------------------------
 // HELPER FUNCTIONS
 //----------------------------------------------------------------------
+
+const clearSearchInput = () => {
+    ui.searchInput.value = '';
+    // Use dispatchEvent because the input event is not triggered by the value property
+    ui.searchInput.dispatchEvent(new Event('input'));
+};
 
 const getImageURL = code => {
     const flag =
@@ -111,7 +135,10 @@ const fetchCurrencies = async () => {
         // 4 - Do something with the data
         // add the values of the data object to the currencies array in the state
         state.currencies = Object.values(data);
-        console.log(state.currencies);
+        // Add the currencies to the filteredCurrencies array in the state
+        // because initially, the filteredCurrencies array is empty
+        state.filteredCurrencies = state.currencies;
+        // render the currencies
         renderCurrencies();
     } catch (error) {
         console.error(error);
