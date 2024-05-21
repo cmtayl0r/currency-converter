@@ -1,5 +1,8 @@
 {
   "name": "currency-converter",
+  "author": "Christopher Taylor",
+  "license": "ISC",
+  "description": "Currency Converter Web App",
   "private": true,
   "version": "0.0.0",
   "type": "module",
