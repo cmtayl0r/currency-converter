@@ -50,7 +50,7 @@ const setupEventListeners = () => {
     ui.dismissBtn.addEventListener('click', hideDrawer);
     ui.searchInput.addEventListener('input', filterCurrencies);
     ui.currencyList.addEventListener('click', selectPair);
-    ui.baseInput.addEventListener('change', convertInput);
+    ui.baseInput.addEventListener('change', convertInput); // input and press enter
     ui.swapBtn.addEventListener('click', switchPair);
 };
 
