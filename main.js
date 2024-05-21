@@ -140,7 +140,20 @@ const convertInput = () => {
 };
 
 // FN: Switch base and target currencies
-const switchPair = () => {};
+// Used by: swapBtn.addEventListener('click', switchPair)
+const switchPair = () => {
+    // swap the base and target currencies in the state
+    const { base, target } = state;
+    // set the base currency to the target currency
+    state.base = target;
+    // set the target currency to the base currency
+    state.target = base;
+    // update the base value in the state with the new base input value
+    state.baseValue = parseFloat(ui.targetInput.value) || 1;
+    // update the exchange rate display in the UI
+    loadExchangeRate();
+    // loadExchangeRate() > displayConversion() > updateButtons() > updateInputs() > updateExchangeRate()
+};
 
 //----------------------------------------------------------------------
 // RENDER FUNCTIONS
