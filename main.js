@@ -45,6 +45,7 @@ const setupEventListeners = () => {
     ui.dismissBtn.addEventListener('click', hideDrawer);
     ui.searchInput.addEventListener('input', filterCurrencies);
     ui.currencyList.addEventListener('click', selectPair);
+    ui.baseInput.addEventListener('change', convertInput);
 };
 
 //----------------------------------------------------------------------
@@ -96,28 +97,30 @@ const filterCurrencies = () => {
 };
 
 const selectPair = event => {
-    // Click on currency in list
+    // Click on currency in selection list
     // CSS removes pointer events from child elements (img, h, p, div)
     // check if the clicked element is an li element with the data-code attribute
     if (event.target.hasAttribute('data-code')) {
-        // destructure the openedDrawer state from the state object
+        //01 - destructure the openedDrawer state from the state object
         const { openedDrawer } = state;
-        // Update openedDrawer state with the selected currency code
+
+        // 02 - Update openedDrawer state with the selected currency code
         // This is either 'base' or 'target' based on the button clicked
         state[openedDrawer] = event.target.dataset.code;
-        // Update buttons with the selected currency code
-        [ui.baseBtn, ui.targetBtn].forEach(btn => {
-            // btn.id is either 'base' or 'target'
-            const code = state[btn.id];
-            // Set the text content and background image of the button
-            // The one selected will be updated (base or target)
-            // The other will remain the same
-            btn.textContent = code;
-            btn.style.setProperty('--image', `url(${getImageURL(code)})`);
-        });
-        // close the drawer after selecting a currency
+
+        // 03 - Load the exchange rate from selection then update the buttons
+        loadExchangeRate();
+        // loadExchangeRate() > displayConversion() > updateButtons() > updateInputs() > updateExchangeRate()
+
+        // 04 - close the drawer after selecting a currency
         hideDrawer();
     }
+};
+
+const convertInput = () => {
+    // update the base value in the state with the base input value
+    state.baseValue = parseFloat(ui.baseInput.value) || 1;
+    loadExchangeRate();
 };
 
 //----------------------------------------------------------------------
@@ -189,6 +192,19 @@ const updateExchangeRate = () => {
     const rate = rates[base][target].toFixed(4);
     // update the exchange rate display in the UI
     ui.exchangeRate.textContent = `1 ${base} = ${rate} ${target}`;
+};
+
+const loadExchangeRate = () => {
+    const { base, rates } = state;
+    if (typeof rates[base] !== 'undefined') {
+        // If the base rates are in state, then show it
+        displayConversion();
+        // displayConversion() > updateButtons() > updateInputs() > updateExchangeRate()
+    } else {
+        // else fetch the exchange rate
+        fetchExchangeRate();
+        // fetchExchangeRate() > displayConversion() > updateButtons() > updateInputs() > updateExchangeRate()
+    }
 };
 
 // **** Currencies list related functions
