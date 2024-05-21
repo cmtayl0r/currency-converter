@@ -1,4 +1,7 @@
 // TODO: Correct keyboard focus, and focus trap
+// TODO: Add ARIA attributes for accessibility
+// TODO: Convert into ES6 classes and modules
+// TODO: Convert structure into a MVC pattern
 
 //----------------------------------------------------------------------
 // STATE
@@ -190,6 +193,16 @@ const displayConversion = () => {
     updateExchangeRate();
 };
 
+const showLoading = () => {
+    ui.controls.classList.add('skeleton');
+    ui.exchangeRate.classList.add('skeleton');
+};
+
+const hideLoading = () => {
+    ui.controls.classList.remove('skeleton');
+    ui.exchangeRate.classList.remove('skeleton');
+};
+
 //----------------------------------------------------------------------
 // HELPER FUNCTIONS
 //----------------------------------------------------------------------
@@ -315,6 +328,10 @@ const fetchCurrencies = async () => {
 const fetchExchangeRate = async () => {
     // destructure the base currency from the state
     const { base } = state;
+
+    // Show loading state skeleton
+    showLoading();
+
     try {
         // fetch the latest exchange rates for the base currency
         let response = await fetch(
@@ -329,6 +346,9 @@ const fetchExchangeRate = async () => {
         state.rates[base] = data;
         // Update the exchange rate display in the UI
         displayConversion();
+
+        // Hide loading state skeleton
+        hideLoading();
     } catch (error) {
         console.error(error);
     }

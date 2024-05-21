@@ -193,6 +193,12 @@ EXCHANGE RATE DISPLAY
         display: inline-block;
         font-weight: var(--fw-semiBold);
         color: var(--clr-exchange-rate);
+
+        /* Used for Skeleton loading animation */
+        &:empty {
+            min-width: 120px;
+            min-height: 1.55rem;
+        }
     }
 }
 
@@ -284,5 +290,28 @@ Relative position set by <main>
     /* Disregards all other childe targets (img, h4, p) inside li  */
     & *:not(li) {
         pointer-events: none;
+    }
+}
+
+.skeleton {
+    position: relative;
+
+    &::after {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        border-radius: 0.25rem;
+        background: var(--loading-background-1);
+        content: '';
+        animation: loading 1s linear infinite alternate;
+    }
+}
+
+@keyframes loading {
+    0% {
+        background: var(--loading-background-1);
+    }
+    100% {
+        background: var(--loading-background-2);
     }
 }
