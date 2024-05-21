@@ -33,6 +33,7 @@ const ui = {
     exchangeRate: document.getElementById('exchange-rate'),
     baseInput: document.getElementById('base-input'),
     targetInput: document.getElementById('target-input'),
+    swapBtn: document.getElementById('swap-btn'),
 };
 
 //----------------------------------------------------------------------
@@ -46,6 +47,7 @@ const setupEventListeners = () => {
     ui.searchInput.addEventListener('input', filterCurrencies);
     ui.currencyList.addEventListener('click', selectPair);
     ui.baseInput.addEventListener('change', convertInput);
+    ui.swapBtn.addEventListener('click', switchPair);
 };
 
 //----------------------------------------------------------------------
@@ -60,6 +62,8 @@ const initApp = () => {
 
 // **** Currencies list related functions
 
+// FN: Show drawer when button is clicked
+// Used by: controls.addEventListener('click', showDrawer)
 const showDrawer = event => {
     // Checks if the clicked element has the data-drawer attribute
     // isolates the button inside the controls as the clickable elements
@@ -70,6 +74,9 @@ const showDrawer = event => {
         ui.drawer.classList.add('show');
     }
 };
+
+// FN: Hide drawer when button is clicked
+// Used by: dismissBtn.addEventListener('click', hideDrawer)
 const hideDrawer = event => {
     // Clears the search input when the drawer is closed
     clearSearchInput();
@@ -78,6 +85,8 @@ const hideDrawer = event => {
     ui.drawer.classList.remove('show');
 };
 
+// FN: Filter currencies based on search input (in drawer view)
+// Used by: searchInput.addEventListener('input', filterCurrencies)
 const filterCurrencies = () => {
     // get the value of the search input and remove any leading or trailing whitespace
     const keyword = ui.searchInput.value.trim().toLowerCase();
@@ -96,6 +105,8 @@ const filterCurrencies = () => {
     renderCurrencies();
 };
 
+// FN: Select currency pair from the drawer
+// Used by: currencyList.addEventListener('click', selectPair)
 const selectPair = event => {
     // Click on currency in selection list
     // CSS removes pointer events from child elements (img, h, p, div)
@@ -117,11 +128,19 @@ const selectPair = event => {
     }
 };
 
+// **** Main conversion related functions
+
+// FN: Change base value number via base input
 const convertInput = () => {
     // update the base value in the state with the base input value
     state.baseValue = parseFloat(ui.baseInput.value) || 1;
+    // update the exchange rate display in the UI
     loadExchangeRate();
+    // loadExchangeRate() > displayConversion() > updateButtons() > updateInputs() > updateExchangeRate()
 };
+
+// FN: Switch base and target currencies
+const switchPair = () => {};
 
 //----------------------------------------------------------------------
 // RENDER FUNCTIONS
@@ -129,6 +148,8 @@ const convertInput = () => {
 
 // **** Currencies list related functions
 
+// FN: Render the currencies in the drawer
+// Used by: fetchCurrencies(), filterCurrencies()
 const renderCurrencies = () => {
     // map over the filteredCurrencies array and create a list item for each currency
     // destructuring the code and name from each currency object
@@ -146,8 +167,10 @@ const renderCurrencies = () => {
         .join('');
 };
 
-// **** Exchange rate related functions
+// **** Main conversion and exchange rate related functions
 
+// FN: Display the conversion in the UI
+// Used by: loadExchangeRate(), convertInput(), switchPair()
 const displayConversion = () => {
     updateButtons();
     updateInputs();
@@ -160,6 +183,8 @@ const displayConversion = () => {
 
 // **** Exchange rate related functions
 
+// FN: Update the buttons (base and target) with the selected currency code
+// Used by: displayConversion()
 const updateButtons = () => {
     // Update buttons with the selected currency code
     [ui.baseBtn, ui.targetBtn].forEach(btn => {
@@ -173,6 +198,8 @@ const updateButtons = () => {
     });
 };
 
+// FN: Update the input fields with the base and target values
+// Used by: displayConversion()
 const updateInputs = () => {
     // destructure the baseValue, base, target, and rates from the state
     const { baseValue, base, target, rates } = state;
@@ -184,6 +211,8 @@ const updateInputs = () => {
     ui.baseInput.value = baseValue;
 };
 
+// FN: Update the exchange rate display in the UI
+// Used by: displayConversion()
 const updateExchangeRate = () => {
     // destructure the base, target, and rates from the state
     const { base, target, rates } = state;
@@ -194,6 +223,9 @@ const updateExchangeRate = () => {
     ui.exchangeRate.textContent = `1 ${base} = ${rate} ${target}`;
 };
 
+// FN: Load the exchange rate from the state or fetch it if not available
+// This function is called when the base or target currency is changed
+// Used by: selectPair(), convertInput(), switchPair()
 const loadExchangeRate = () => {
     const { base, rates } = state;
     if (typeof rates[base] !== 'undefined') {
@@ -209,6 +241,8 @@ const loadExchangeRate = () => {
 
 // **** Currencies list related functions
 
+// FN: Get the available currencies (not including the base and target currencies)
+// Used by: filterCurrencies()
 const getAvailableCurrencies = () => {
     // filter the currencies array to exclude the base and target currencies
     return state.currencies.filter(({ code }) => {
@@ -218,13 +252,15 @@ const getAvailableCurrencies = () => {
 };
 
 // FN: Used to clear the search input when the drawer is closed
+// Used by: hideDrawer()
 const clearSearchInput = () => {
     ui.searchInput.value = '';
     // Use dispatchEvent because the input event is not triggered by the value property
     ui.searchInput.dispatchEvent(new Event('input'));
 };
 
-// FN: Used to get the image URL for the currency flag when ren
+// FN: Used to get the image URL for the currency flag when rendering the currencies
+// Used by: renderCurrencies()
 const getImageURL = code => {
     const flag =
         'https://wise.com/public-resources/assets/flags/rectangle/{code}.png';
