@@ -1,8 +1,8 @@
 // TODO: Restructure HTML and CSS for control currency button/dropdown to have hover/active states
 // TODO: Correct keyboard focus, and focus trap
 // TODO: Add ARIA attributes for accessibility
-// TODO: Convert into ES6 classes and modules
-// TODO: Convert structure into a MVC pattern
+// TODO: Convert into ES6 classes and modules (branch)
+// TODO: Convert structure into a MVC pattern (branch)
 
 //----------------------------------------------------------------------
 // STATE
